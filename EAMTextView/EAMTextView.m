@@ -134,10 +134,17 @@ static CGFloat const EAMTextViewPlaceholderInset = 8.0f;
     [super drawRect:rect];
     if ([self _shouldDrawPlaceholder]) {
         [self.placeholderColor set];
-        [self.placeholder drawInRect:[self _placeholderRectInRect:rect]
-                            withFont:self.font
-                       lineBreakMode:NSLineBreakByTruncatingTail
-                           alignment:self.textAlignment];
+        
+        UIFont *font = self.font;
+        
+        NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+        paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
+        paragraphStyle.alignment = self.textAlignment;
+        
+        NSDictionary *attributes = @{NSFontAttributeName: font,
+                                     NSParagraphStyleAttributeName: paragraphStyle};
+        
+        [self.placeholder drawInRect:[self _placeholderRectInRect:rect] withAttributes:attributes];
     }
 }
 
